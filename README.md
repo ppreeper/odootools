@@ -1,0 +1,2 @@
+# odootools
+odoo cli tools
