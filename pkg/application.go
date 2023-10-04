@@ -36,3 +36,26 @@ func (app *Application) GetRecords(q *QueryDef) {
 		fmt.Println(string(jsonStr))
 	}
 }
+
+func GetRecords(oc *odoojrpc.Odoo, q *QueryDef) []map[string]any {
+	umdl := strings.Replace(q.Model, "_", ".", -1)
+
+	fields := parseFields(q.Fields)
+	if q.Count {
+		fields = []string{"id"}
+	}
+
+	filtp, err := parseFilter(q.Filter)
+	CheckErr(err)
+
+	rr, err := oc.SearchRead(umdl, filtp, q.Offset, q.Limit, fields)
+	FatalErr(err)
+	// if q.Count {
+	// 	fmt.Println("records:", len(rr))
+	// } else {
+	// 	jsonStr, err := json.MarshalIndent(rr, "", "  ")
+	// 	CheckErr(err)
+	// 	fmt.Println(string(jsonStr))
+	// }
+	return rr
+}

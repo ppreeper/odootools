@@ -11,11 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	cServer pkg.Host
-	q       pkg.QueryDef
-)
-
 // queryCmd represents the query command
 var queryCmd = &cobra.Command{
 	Use:        "query",
@@ -25,52 +20,52 @@ var queryCmd = &cobra.Command{
 	ArgAliases: []string{"system"},
 	Run: func(cmd *cobra.Command, args []string) {
 		system := args[0]
-
 		// get config file
 		HostMap := pkg.GetConf(configFile)
 
 		// Server connection profile
 		server := HostMap[system]
-		if server.Hostname == "" && cServer.Hostname == "" {
+		// fmt.Println("server", server)
+		if server.Hostname == "" && sHost.Hostname == "" {
 			fmt.Println("no host specified")
 			return
 		}
-		if cServer.Hostname != "" {
-			server.Hostname = cServer.Hostname
+		if sHost.Hostname != "" {
+			server.Hostname = sHost.Hostname
 		}
 
 		// 	Database
-		if server.Database == "" && cServer.Database == "" {
+		if server.Database == "" && sHost.Database == "" {
 			fmt.Println("no database specified")
 			return
 		}
-		if cServer.Database != "" {
-			server.Database = cServer.Database
+		if sHost.Database != "" {
+			server.Database = sHost.Database
 		}
 
 		// 	Username
-		if cServer.Username != "" {
-			server.Username = cServer.Username
+		if sHost.Username != "" {
+			server.Username = sHost.Username
 		}
 		// 	Password
-		if cServer.Password != "" {
-			server.Password = cServer.Password
+		if sHost.Password != "" {
+			server.Password = sHost.Password
 		}
 		// 	Protocol
-		if server.Protocol == "" && cServer.Protocol != "" {
-			server.Protocol = cServer.Protocol
+		if server.Protocol == "" && sHost.Protocol != "" {
+			server.Protocol = sHost.Protocol
 		}
 		// 	Schema
-		if server.Schema == "" && cServer.Schema != "" {
-			server.Schema = cServer.Schema
+		if server.Schema == "" && sHost.Schema != "" {
+			server.Schema = sHost.Schema
 		}
 		// 	Port
-		if server.Port == 0 {
-			server.Port = cServer.Port
+		if sHost.Port != 0 {
+			server.Port = sHost.Port
 		}
 		// 	Jobcount
-		if server.Jobcount == 0 {
-			server.Jobcount = cServer.Jobcount
+		if sHost.Jobcount != 0 {
+			server.Jobcount = sHost.Jobcount
 		}
 
 		if q.Model == "" {
@@ -90,12 +85,12 @@ var queryCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(queryCmd)
 
-	queryCmd.Flags().StringVar(&cServer.Hostname, "hostname", "", "odoo hostname")
-	queryCmd.Flags().StringVar(&cServer.Database, "database", "", "odoo database")
-	queryCmd.Flags().StringVar(&cServer.Username, "username", "", "odoo username")
-	queryCmd.Flags().StringVar(&cServer.Password, "password", "", "odoo password")
-	queryCmd.Flags().StringVar(&cServer.Schema, "schema", "http", "odoo url schema [http|https]")
-	queryCmd.Flags().IntVar(&cServer.Port, "port", 8069, "odoo port")
+	queryCmd.Flags().StringVar(&sHost.Hostname, "hostname", "", "odoo hostname")
+	queryCmd.Flags().StringVar(&sHost.Database, "database", "", "odoo database")
+	queryCmd.Flags().StringVar(&sHost.Username, "username", "", "odoo username")
+	queryCmd.Flags().StringVar(&sHost.Password, "password", "", "odoo password")
+	queryCmd.Flags().StringVar(&sHost.Schema, "schema", "", "odoo url schema [http|https]")
+	queryCmd.Flags().IntVar(&sHost.Port, "port", 0, "odoo port")
 
 	queryCmd.Flags().StringVarP(&q.Model, "model", "m", "", "model")
 	queryCmd.Flags().StringVar(&q.Filter, "filter", "", "filter")

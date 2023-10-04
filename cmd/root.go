@@ -6,11 +6,22 @@ package cmd
 import (
 	"os"
 
+	"github.com/ppreeper/odoojrpc"
 	"github.com/ppreeper/odootools/pkg"
 	"github.com/spf13/cobra"
 )
 
-var configFile string
+var (
+	configFile string
+	sHost      pkg.Host
+	dHost      pkg.Host
+	q          pkg.QueryDef
+	INSERT     = true
+	UPDATE     = false
+)
+
+// type alias to reduce typing
+type oarg = odoojrpc.FilterArg
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
