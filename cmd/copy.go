@@ -156,10 +156,10 @@ var copyCmd = &cobra.Command{
 		for _, record := range records {
 			if name, ok := record["name"]; ok {
 				fmt.Println(record, name)
-				rid, err := oDest.GetID(umdl, oarg{oarg{"id", "=", record["id"]}})
+				rid, err := oDest.GetID(umdl, []any{[]any{"id", "=", record["id"]}})
 				pkg.CheckErr(err)
 				fmt.Println(rid)
-				rname, err := oDest.GetID(umdl, oarg{oarg{"name", "=", name}})
+				rname, err := oDest.GetID(umdl, []any{[]any{"name", "=", name}})
 				pkg.CheckErr(err)
 				fmt.Println(rname)
 				if rid == 1 {
